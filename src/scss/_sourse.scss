@@ -1,0 +1,130 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+a {
+	text-decoration: none;
+
+	&:hover {
+		text-decoration: none;
+	}
+}
+
+li {
+	list-style-type: none;
+}
+
+button {
+	cursor: pointer;
+	outline: 0 none !important;
+
+}
+
+body::-webkit-scrollbar {
+	width: 6px;
+}
+
+body::-webkit-scrollbar-track {
+	background: #f0f0f0;
+}
+
+body::-webkit-scrollbar-thumb {
+	background: #8D4DFD;
+	border-radius: 10px;
+}
+
+
+input {
+	outline: 0 none !important;
+
+	font-family: $mainFont
+}
+
+input[type=text] {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+input[type=tel] {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+input[type=email] {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+input[type=submit] {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+textarea {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+button {
+	font-family: $mainFont;
+}
+
+select {
+	cursor: pointer;
+	outline: 0 none !important;
+	font-family: $mainFont;
+}
+
+textarea {
+	outline: 0 none !important;
+	font-family: $mainFont;
+}
+
+body {
+	background: #fff;
+	font-family: $mainFont;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: $mainFont;
+}
+
+ul {
+	margin-bottom: 0;
+}
+
+svg {
+	shape-rendering: geometricPrecision;
+	text-rendering: geometricPrecision;
+	image-rendering: optimizeQuality;
+}
+
+.app {
+
+	min-width: 260px;
+	padding-top: 0;
+}
+
+.container {
+	width: 1500px;
+	margin: 0 auto;
+}
+
+
+@media only screen and (max-width: 1540px) {}
+
+@media only screen and (max-width: 1280px) {}
+
+@media only screen and (max-width: 780px) {}

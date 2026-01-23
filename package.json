@@ -1,0 +1,32 @@
+{
+  "name": "started-vite-template",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "browserslist": [
+    "cover 99.5%"
+  ],
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "fast-glob": "^3.3.3",
+    "handlebars": "^4.7.8",
+    "imagemin": "^9.0.1",
+    "imagemin-webp": "^8.0.0",
+    "postcss-sort-media-queries": "^5.2.0",
+    "sass": "^1.85.1",
+    "sharp": "^0.33.5",
+    "svgo": "^3.3.2",
+    "vite": "^6.2.1",
+    "vite-plugin-handlebars": "^2.0.0",
+    "vite-plugin-image-optimizer": "^1.1.8"
+  },
+  "dependencies": {
+    "swiper": "^11.2.10",
+    "vite-plugin-full-reload": "^1.2.0"
+  }
+}
