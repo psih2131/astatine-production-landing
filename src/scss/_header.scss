@@ -1,0 +1,127 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 24px 0;
+  transition: background 0.4s ease, padding 0.4s ease;
+
+  &.header--scrolled {
+    background: rgba($bgDark, 0.95);
+    backdrop-filter: blur(12px);
+  }
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__logo {
+    font-family: $titleFont;
+    font-weight: 700;
+    font-size: 24px;
+    letter-spacing: 0.15em;
+    color: $white;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+
+    @media (max-width: 1024px) {
+      display: none;
+    }
+  }
+
+  &__socials {
+    display: flex;
+    gap: 12px;
+  }
+
+  &__social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    color: rgba($white, 0.8);
+    transition: color 0.3s, transform 0.3s;
+
+    &:hover {
+      color: #BE030C;
+      transform: scale(1.1);
+    }
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  &__btn {
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  &__nav {
+    display: flex;
+    gap: 40px;
+
+    @media (max-width: 780px) {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 32px;
+      background: rgba($bgDark, 0.98);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+
+      .menu-open & {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  }
+
+  &__link {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    color: rgba($white, 0.9);
+    transition: color 0.3s;
+
+    &:hover {
+      color: $accent;
+    }
+  }
+
+  &__burger {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    background: none;
+    border: none;
+    padding: 8px;
+
+    span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: $white;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+
+    @media (max-width: 780px) {
+      display: flex;
+    }
+  }
+}

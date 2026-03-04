@@ -27,11 +27,11 @@ body::-webkit-scrollbar {
 }
 
 body::-webkit-scrollbar-track {
-	background: #f0f0f0;
+	background: $bgDark;
 }
 
 body::-webkit-scrollbar-thumb {
-	background: #8D4DFD;
+	background: $gold;
 	border-radius: 10px;
 }
 
@@ -88,8 +88,8 @@ textarea {
 }
 
 body {
-	background: #fff;
 	font-family: $mainFont;
+	color: $white;
 }
 
 h1,
@@ -112,19 +112,35 @@ svg {
 }
 
 .app {
-
+	background: $bgDark;
 	min-width: 260px;
+	min-height: 100vh;
 	padding-top: 0;
+	overflow-x: clip;
 }
 
 .container {
 	width: 1500px;
+	max-width: 100%;
 	margin: 0 auto;
+	padding: 0 20px;
 }
 
+@media (max-width: 1540px) {
+	.container {
+		width: 1200px;
+	}
+}
 
-@media only screen and (max-width: 1540px) {}
+@media (max-width: 1240px) {
+	.container {
+		width: 750px;
+	}
+}
 
-@media only screen and (max-width: 1280px) {}
-
-@media only screen and (max-width: 780px) {}
+@media (max-width: 760px) {
+	.container {
+		width: 350px;
+		padding: 0 16px;
+	}
+}

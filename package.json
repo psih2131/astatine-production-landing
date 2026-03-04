@@ -26,6 +26,10 @@
     "vite-plugin-image-optimizer": "^1.1.8"
   },
   "dependencies": {
+    "@fancyapps/ui": "^6.1.13",
+    "aos": "^2.3.4",
+    "gsap": "^3.14.2",
+    "micromodal": "^0.6.1",
     "swiper": "^11.2.10",
     "vite-plugin-full-reload": "^1.2.0"
   }

@@ -1,0 +1,142 @@
+// Shared modal base
+.modal-base {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s, visibility 0.3s;
+
+  &.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+
+    .modal-container {
+      transform: scale(1);
+    }
+  }
+}
+
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 11, 20, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  cursor: pointer;
+}
+
+.modal-container {
+  position: relative;
+  transform: scale(0.95);
+  transition: transform 0.3s;
+}
+
+.modal__close {
+  position: absolute;
+  top: -48px;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s, border-color 0.3s;
+  z-index: 2;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 14px;
+    height: 2px;
+    background: $white;
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  &::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: $white;
+  }
+}
+
+// Video modal
+.video-modal__container {
+  width: 90vw;
+  max-width: 960px;
+}
+
+.video-modal__wrap {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: #000;
+
+  iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// Form modal
+.form-modal__container {
+  width: 90vw;
+  max-width: 520px;
+}
+
+.form-modal__wrap {
+  padding: 48px 40px;
+  background: rgba(#0E0F16, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba($white, 0.08);
+  border-radius: 20px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+
+.form-modal__title {
+  font-family: $titleFont;
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 700;
+  color: $white;
+  margin: 0 0 12px 0;
+}
+
+.form-modal__subtitle {
+  font-family: $mainFont;
+  font-size: 15px;
+  color: rgba($white, 0.7);
+  margin: 0 0 28px 0;
+  line-height: 1.5;
+}
+
+.form-modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  .contact-form__field--checkbox {
+    text-align: left;
+  }
+
+  .contact-form__field--submit {
+    align-self: center;
+  }
+}
