@@ -1,4 +1,5 @@
 import '../scss/main.scss'
+import { initPreloader } from './preloader.js'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import { Fancybox } from '@fancyapps/ui'
@@ -9,8 +10,17 @@ import { initMarquee } from './marquee-move.js'
 import { initNewsSlider } from './news-slider.js'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { initLenisScroll } from './lenis-scroll.js'
 
 gsap.registerPlugin(ScrollTrigger)
+
+const lenis = initLenisScroll()
+
+initPreloader()
+window.addEventListener('preloader:done', () => {
+  ScrollTrigger.refresh()
+  lenis?.resize()
+})
 
 // Hero video — по умолчанию выключен, включается при первом скролле
 const heroVideoBg = document.querySelector('.hero__video-bg')
@@ -55,6 +65,81 @@ if (hero) {
     window.addEventListener('load', () => ScrollTrigger.refresh())
     window.addEventListener('resize', () => ScrollTrigger.refresh())
   }
+
+  // Фон hero: parallax по курсору (pointermove на window — иначе не ловится над fixed header / pin)
+  const heroBgImg = hero.querySelector('.hero__bg-img')
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+  if (heroBgImg && heroBlock1 && !reduceMotion.matches) {
+    const strength = 40
+    const baseScale = 1.08
+    const ease = 0.14
+    let targetX = 0
+    let targetY = 0
+    let curX = 0
+    let curY = 0
+    let rafScheduled = false
+
+    const applyParallax = () => {
+      curX += (targetX - curX) * ease
+      curY += (targetY - curY) * ease
+      heroBgImg.style.transform = `translate3d(${curX}px, ${curY}px, 0) scale(${baseScale})`
+      const moving =
+        Math.abs(targetX - curX) > 0.12 ||
+        Math.abs(targetY - curY) > 0.12 ||
+        Math.abs(curX) > 0.12 ||
+        Math.abs(curY) > 0.12
+      rafScheduled = false
+      if (moving) {
+        rafScheduled = true
+        requestAnimationFrame(applyParallax)
+      }
+    }
+
+    const schedule = () => {
+      if (!rafScheduled) {
+        rafScheduled = true
+        requestAnimationFrame(applyParallax)
+      }
+    }
+
+    const setFromPointer = (clientX, clientY) => {
+      const rect = heroBlock1.getBoundingClientRect()
+      if (rect.width <= 0 || rect.height <= 0) return
+      let nx = ((clientX - rect.left) / rect.width) * 2 - 1
+      let ny = ((clientY - rect.top) / rect.height) * 2 - 1
+      nx = Math.max(-1, Math.min(1, nx))
+      ny = Math.max(-1, Math.min(1, ny))
+      targetX = nx * strength
+      targetY = ny * strength
+      schedule()
+    }
+
+    const pointerInBlock1 = (clientX, clientY) => {
+      const rect = heroBlock1.getBoundingClientRect()
+      return (
+        rect.width > 0 &&
+        rect.height > 0 &&
+        clientX >= rect.left &&
+        clientX <= rect.right &&
+        clientY >= rect.top &&
+        clientY <= rect.bottom
+      )
+    }
+
+    const onPointerMove = (e) => {
+      const x = e.clientX
+      const y = e.clientY
+      if (!pointerInBlock1(x, y)) {
+        targetX = 0
+        targetY = 0
+        schedule()
+        return
+      }
+      setFromPointer(x, y)
+    }
+
+    window.addEventListener('pointermove', onPointerMove, { passive: true })
+  }
 }
 
 // Header: тёмный фон только после hero (пока шапка над hero — прозрачная)
@@ -67,15 +152,19 @@ if (header) {
   })
 }
 
-// Smooth scroll for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+// Якоря: с Lenis — через scrollTo, иначе нативный smooth
+document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   anchor.addEventListener('click', function (e) {
     const href = this.getAttribute('href')
     if (href === '#') return
     e.preventDefault()
     const target = document.querySelector(href)
     if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      if (lenis) {
+        lenis.scrollTo(target, { offset: 0 })
+      } else {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
       document.body.classList.remove('menu-open')
     }
   })
@@ -113,13 +202,14 @@ if (portfolio) {
         scrollTrigger: {
           trigger: portfolio,
           pin: true,
+          anticipatePin: 1,
           scrub: 4,
           start: 'top 25%',
           end: () => {
             const { maxScroll, startOffset } = getScrollData()
             return `+=${startOffset + maxScroll}`
-          }
-        }
+          },
+        },
       }
     )
 

@@ -1,5 +1,5 @@
 import Swiper from 'swiper'
-import { Pagination } from 'swiper/modules'
+import { Pagination, Navigation } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
 
@@ -27,19 +27,31 @@ function equalizeNewsCardHeights() {
 export function initNewsSlider() {
   truncateNewsDescriptions()
 
-  const el = document.querySelector('.news-swiper')
-  if (!el) return
+  const outer = document.querySelector('.news-swiper-outer')
+  const el = outer?.querySelector('.news-swiper')
+  if (!el || !outer) return
+
+  const prevEl = outer.querySelector('.news-swiper-button--prev')
+  const nextEl = outer.querySelector('.news-swiper-button--next')
 
   const swiper = new Swiper(el, {
-    modules: [Pagination],
+    modules: [Pagination, Navigation],
+    loop: true,
     slidesPerView: 4,
     spaceBetween: 24,
     pagination: {
       el: '.news-swiper-pagination',
       clickable: true,
     },
+    navigation: {
+      prevEl,
+      nextEl,
+    },
     on: {
       init() {
+        requestAnimationFrame(() => equalizeNewsCardHeights())
+      },
+      slideChange() {
         requestAnimationFrame(() => equalizeNewsCardHeights())
       },
     },

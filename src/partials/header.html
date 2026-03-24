@@ -13,10 +13,13 @@
 </head>
 
 <body>
+    {{> components/preloader }}
     <div class="app">
         <header class="header" id="header">
             <div class="container header__inner">
-                <a href="/#home" class="header__logo">ASTATINE</a>
+                <a href="/#home" class="header__logo">
+                    <img src="/img/logo/header-logo2.png" alt="Astatine Production" class="header__logo-img" aria-hidden="true" />
+                </a>
                 <nav class="header__nav">
                     <a href="#home" class="header__link">Home</a>
                     <a href="#about" class="header__link">About</a>
