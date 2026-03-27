@@ -102,13 +102,20 @@
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 760px) {
   .project-page {
-    padding: 40px 0 80px;
+    padding: 120px 0 80px;
   }
 
   .project-gallery {
     grid-template-columns: 1fr;
     gap: 16px;
+  }
+  .project-page__title{
+    font-size: 24px;
+  }
+  .project-page__subtitle{
+    font-size: 14px;
+    margin-bottom: 32px;
   }
 }

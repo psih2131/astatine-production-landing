@@ -52,3 +52,13 @@
     text-align: center;
   }
 }
+@media (max-width: 940px) {
+  .footer__credits{
+    width: 100%;
+    text-align: center;
+  }
+  .footer__nav{
+    width: 100%;
+    justify-content: center;
+  }
+}

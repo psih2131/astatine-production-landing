@@ -11,6 +11,7 @@ import { initNewsSlider } from './news-slider.js'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { initLenisScroll } from './lenis-scroll.js'
+import { initBurgerMeny } from './burgerMeny.js'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -69,6 +70,7 @@ if (hero) {
   // Фон hero: parallax по курсору (pointermove на window — иначе не ловится над fixed header / pin)
   const heroBgImg = hero.querySelector('.hero__bg-img')
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+  const mqNoHeroParallax = window.matchMedia('(max-width: 760px)')
   if (heroBgImg && heroBlock1 && !reduceMotion.matches) {
     const strength = 40
     const baseScale = 1.08
@@ -138,21 +140,47 @@ if (hero) {
       setFromPointer(x, y)
     }
 
-    window.addEventListener('pointermove', onPointerMove, { passive: true })
+    let heroParallaxListening = false
+    const syncHeroParallaxListeners = () => {
+      if (mqNoHeroParallax.matches) {
+        if (heroParallaxListening) {
+          window.removeEventListener('pointermove', onPointerMove)
+          heroParallaxListening = false
+        }
+        heroBgImg.style.transform = ''
+        targetX = 0
+        targetY = 0
+        curX = 0
+        curY = 0
+        rafScheduled = false
+        return
+      }
+      if (!heroParallaxListening) {
+        window.addEventListener('pointermove', onPointerMove, { passive: true })
+        heroParallaxListening = true
+      }
+    }
+
+    syncHeroParallaxListeners()
+    mqNoHeroParallax.addEventListener('change', syncHeroParallaxListeners)
   }
 }
 
-// Header: тёмный фон только после hero (пока шапка над hero — прозрачная)
+// Header: на главной — тёмный фон после pin-hero (~2.5vh скролла); на остальных страницах — сразу
 const header = document.getElementById('header')
 if (header) {
-  window.addEventListener('scroll', () => {
-    // Hero занимает ~250vh скролла (pin), пока над ним — без фона
+  const onHeaderScroll = () => {
+    const hasHero = document.querySelector('.hero')
     const heroScrollEnd = window.innerHeight * 2.5
-    header.classList.toggle('header--scrolled', window.scrollY > heroScrollEnd)
-  })
+    const scrolled = hasHero ? window.scrollY > heroScrollEnd : true
+    header.classList.toggle('header--scrolled', scrolled)
+  }
+  window.addEventListener('scroll', onHeaderScroll, { passive: true })
+  window.addEventListener('resize', onHeaderScroll)
+  onHeaderScroll()
 }
 
-// Якоря: с Lenis — через scrollTo, иначе нативный smooth
+// Якоря: плавный scroll через контроллер (Lenis выше 940px, иначе window.scrollTo)
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   anchor.addEventListener('click', function (e) {
     const href = this.getAttribute('href')
@@ -160,58 +188,55 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     e.preventDefault()
     const target = document.querySelector(href)
     if (target) {
-      if (lenis) {
-        lenis.scrollTo(target, { offset: 0 })
-      } else {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      }
-      document.body.classList.remove('menu-open')
+      lenis.scrollTo(target, { offset: 0 })
     }
   })
 })
 
-// Mobile menu
-const burger = document.querySelector('.header__burger')
-if (burger) {
-  burger.addEventListener('click', () => {
-    document.body.classList.toggle('menu-open')
-  })
-}
-
-// Portfolio: horizontal scroll on vertical scroll
-// Карточки смещены вправо при входе в секцию, при скролле двигаются справа налево
+// Portfolio: pin + горизонтальный скролл только от 941px; ≤940 — обычная секция (см. _home.scss)
 const portfolio = document.querySelector('.portfolio')
 if (portfolio) {
   const track = portfolio.querySelector('.portfolio-track')
   const scrollWrap = portfolio.querySelector('.portfolio-scroll')
 
   if (track && scrollWrap) {
-    const getScrollData = () => {
-      const trackWidth = track.scrollWidth
-      const viewWidth = scrollWrap.offsetWidth
-      const maxScroll = Math.max(0, trackWidth - viewWidth)
-      const startOffset = Math.max(0, viewWidth - 808)
-      return { maxScroll, startOffset }
-    }
+    ScrollTrigger.matchMedia({
+      '(min-width: 941px)': function () {
+        const getScrollData = () => {
+          const trackWidth = track.scrollWidth
+          const viewWidth = scrollWrap.offsetWidth
+          const maxScroll = Math.max(0, trackWidth - viewWidth)
+          const startOffset = Math.max(0, viewWidth - 808)
+          return { maxScroll, startOffset }
+        }
 
-    gsap.fromTo(track,
-      { x: () => getScrollData().startOffset },
-      {
-        x: () => -getScrollData().maxScroll,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: portfolio,
-          pin: true,
-          anticipatePin: 1,
-          scrub: 4,
-          start: 'top 25%',
-          end: () => {
-            const { maxScroll, startOffset } = getScrollData()
-            return `+=${startOffset + maxScroll}`
-          },
-        },
-      }
-    )
+        const tween = gsap.fromTo(
+          track,
+          { x: () => getScrollData().startOffset },
+          {
+            x: () => -getScrollData().maxScroll,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: portfolio,
+              pin: true,
+              anticipatePin: 1,
+              scrub: 4,
+              start: 'top 25%',
+              end: () => {
+                const { maxScroll, startOffset } = getScrollData()
+                return `+=${startOffset + maxScroll}`
+              },
+            },
+          }
+        )
+
+        return function () {
+          tween.scrollTrigger?.kill()
+          tween.kill()
+          gsap.set(track, { clearProps: 'transform' })
+        }
+      },
+    })
 
     window.addEventListener('load', () => ScrollTrigger.refresh())
     window.addEventListener('resize', () => ScrollTrigger.refresh())
@@ -242,3 +267,4 @@ if (projectGallery) {
 
 initMarquee()
 initNewsSlider()
+initBurgerMeny()

@@ -37,8 +37,22 @@ export function initNewsSlider() {
   const swiper = new Swiper(el, {
     modules: [Pagination, Navigation],
     loop: true,
-    slidesPerView: 4,
+    slidesPerView: 1,
     spaceBetween: 24,
+    breakpoints: {
+      761: {
+        slidesPerView: 2,
+        spaceBetween: 24,
+      },
+      941: {
+        slidesPerView: 3,
+        spaceBetween: 24,
+      },
+      1540: {
+        slidesPerView: 4,
+        spaceBetween: 24,
+      },
+    },
     pagination: {
       el: '.news-swiper-pagination',
       clickable: true,
@@ -52,6 +66,9 @@ export function initNewsSlider() {
         requestAnimationFrame(() => equalizeNewsCardHeights())
       },
       slideChange() {
+        requestAnimationFrame(() => equalizeNewsCardHeights())
+      },
+      breakpoint() {
         requestAnimationFrame(() => equalizeNewsCardHeights())
       },
     },

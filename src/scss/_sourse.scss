@@ -144,6 +144,12 @@ svg {
 
 @media (max-width: 1240px) {
 	.container {
+		width: 900px;
+	}
+}
+
+@media (max-width: 940px) {
+	.container {
 		width: 750px;
 	}
 }
@@ -151,6 +157,6 @@ svg {
 @media (max-width: 760px) {
 	.container {
 		width: 350px;
-		padding: 0 16px;
+		padding: 0 0;
 	}
 }
