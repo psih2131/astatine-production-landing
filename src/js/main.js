@@ -47,21 +47,23 @@ if (hero) {
   const heroVideoWrap = hero.querySelector('.hero__video-wrap')
 
   if (heroPin && heroBlock1 && heroBlock2 && heroVideoWrap) {
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: hero,
-        start: 'top top',
-        end: '+=250%',
-        scrub: 2,
-        pin: true,
+    ScrollTrigger.matchMedia({
+      '(min-width: 761px)': function () {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: hero,
+            start: 'top top',
+            end: '+=250%',
+            scrub: 2,
+            pin: true,
+          },
+        })
+
+        tl.fromTo(heroBlock2, { top: '100%' }, { top: 0, duration: 0.45, ease: 'none' }, 0)
+        tl.fromTo(heroBlock1, { scale: 1, rotateX: 0 }, { scale: 0.82, rotateX: -12, duration: 0.45, ease: 'none' }, 0)
+        tl.fromTo(heroVideoWrap, { scale: 0.6, width: '60%', maxWidth: 900 }, { scale: 1, width: '100%', maxWidth: 1500, duration: 0.55, ease: 'none' }, 0.45)
       },
     })
-
-    // Фаза 1 (0–45% скролла): block2 наезжает; block1 уменьшается и уходит по оси Z (rotateX)
-    tl.fromTo(heroBlock2, { top: '100%' }, { top: 0, duration: 0.45, ease: 'none' }, 0)
-    tl.fromTo(heroBlock1, { scale: 1, rotateX: 0 }, { scale: 0.82, rotateX: -12, duration: 0.45, ease: 'none' }, 0)
-    // Фаза 2 (45–100% скролла): видео расширяется до 1500px
-    tl.fromTo(heroVideoWrap, { scale: 0.6, width: '60%', maxWidth: 900 }, { scale: 1, width: '100%', maxWidth: 1500, duration: 0.55, ease: 'none' }, 0.45)
 
     window.addEventListener('load', () => ScrollTrigger.refresh())
     window.addEventListener('resize', () => ScrollTrigger.refresh())
@@ -169,14 +171,26 @@ if (hero) {
 // Header: на главной — тёмный фон после pin-hero (~2.5vh скролла); на остальных страницах — сразу
 const header = document.getElementById('header')
 if (header) {
+  const mqHeroMobileLayout = window.matchMedia('(max-width: 760px)')
   const onHeaderScroll = () => {
     const hasHero = document.querySelector('.hero')
-    const heroScrollEnd = window.innerHeight * 2.5
-    const scrolled = hasHero ? window.scrollY > heroScrollEnd : true
+    let scrolled
+    if (!hasHero) {
+      scrolled = true
+    } else if (mqHeroMobileLayout.matches) {
+      scrolled = window.scrollY > window.innerHeight * 0.55
+    } else {
+      scrolled = window.scrollY > window.innerHeight * 2.5
+    }
     header.classList.toggle('header--scrolled', scrolled)
   }
   window.addEventListener('scroll', onHeaderScroll, { passive: true })
   window.addEventListener('resize', onHeaderScroll)
+  if (mqHeroMobileLayout.addEventListener) {
+    mqHeroMobileLayout.addEventListener('change', onHeaderScroll)
+  } else {
+    mqHeroMobileLayout.addListener(onHeaderScroll)
+  }
   onHeaderScroll()
 }
 

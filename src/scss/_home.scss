@@ -238,25 +238,37 @@
 }
 
 @media (max-width: 760px) {
+  .hero {
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .hero__pin {
+    height: auto;
+    min-height: 100vh;
+    min-height: 100svh;
+    perspective: none;
+  }
+
+  .hero__block1 {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100svh;
+    transform: none !important;
+  }
+
+  .hero__block2 {
+    display: none !important;
+  }
+
   .hero__block1-content {
     padding: 0 16px;
   }
 
   .hero__title {
     font-size: clamp(28px, 8vw, 40px);
-  }
-
-  .hero__block2 {
-    padding: 60px 16px 80px;
-  }
-
-  .hero__showreel {
-    font-size: clamp(60px, 20vw, 120px);
-    margin-bottom: 16px;
-  }
-
-  .hero__video-wrap {
-    width: 85%;
   }
 }
 
@@ -471,7 +483,7 @@
   height: 48px;
   border-radius: 12px;
   background: #25262E;
-  color: #B065FF;
+  color: #ebbd74;
   margin-bottom: 24px;
 }
 
@@ -488,7 +500,20 @@
   font-size: clamp(36px, 4vw, 48px);
   font-weight: 700;
   line-height: 1;
-  background: linear-gradient(90deg, #8B9CAE, #C86A7A);
+  background-color: transparent;
+  background-image: linear-gradient(
+      110deg,
+      transparent 0%,
+      transparent 42%,
+      rgba(255, 255, 255, 0.22) 50%,
+      transparent 58%,
+      transparent 100%
+    ),
+    linear-gradient(90deg, #bd9e6b, #5e1f29);
+  background-size: 220% 100%, 100% 100%;
+  background-position: -120% 0, 0;
+  background-repeat: no-repeat;
+  animation: portfolio-btn-shine 2.8s ease-in-out infinite;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -995,7 +1020,7 @@
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: #4B0F1A;
+  background: #bd9e6b;
   flex-shrink: 0;
   animation: marquee-dot-pulse 1.5s ease-in-out infinite;
 }
@@ -1568,7 +1593,6 @@
 }
 
 .news-card__link {
- 
   display: inline-flex;
   align-items: center;
   align-self: flex-start;
@@ -1578,11 +1602,25 @@
   font-size: 14px;
   font-weight: 600;
   color: $white;
-  background: linear-gradient(90deg, #1D2636, #5E1F29);
-  border: 1px solid rgba($white, 0.2);
+  text-decoration: none;
+  border: none;
   border-radius: 100px;
+  cursor: pointer;
   transition: opacity 0.3s, transform 0.3s;
-  margin-top: 20px;
+  background-color: transparent;
+  background-image: linear-gradient(
+      110deg,
+      transparent 0%,
+      transparent 42%,
+      rgba(255, 255, 255, 0.22) 50%,
+      transparent 58%,
+      transparent 100%
+    ),
+    linear-gradient(90deg, #bd9e6b, #5e1f29);
+  background-size: 220% 100%, 100% 100%;
+  background-position: -120% 0, 0;
+  background-repeat: no-repeat;
+  animation: portfolio-btn-shine 2.8s ease-in-out infinite;
 }
 
 .news-card__link:hover {
@@ -2546,10 +2584,6 @@
   .hero__showreel{
     font-size: 45px;
   }
-  .hero__block2{
-    padding-top: 0;
-    padding-bottom: 0;
-  }
   .about{
     padding-top: 0;
   }
@@ -2675,5 +2709,18 @@
     width: 350px;
     left: calc(50% - 175px);
     top: 100px;
+  }
+  .about{
+    padding-top: 80px;
+  }
+  .contact__logo-img{
+    width: 350px;
+    left: calc(50% - 175px);
+    bottom: -100px;
+  }
+  .contact-form__field--textarea {
+    textarea{
+      height: 100px;
+    }
   }
 }
